@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Dataset{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Dataset</li>
+</ol>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Modality</th>
+        <th>Language</th>
+        <th>Tags</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for dataset in dataset_list %}
+      <tr>
+        <td>{{ dataset.id }}</td>
+        <td>{{ dataset.name }}</td>
+        <td>{{ dataset.modality }}</td>
+        <td>{{ dataset.language }}</td>
+        <td>{{ dataset.get_tags }}</td>
+        <td><a href="{{ dataset.get_absolute_url }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock main_content %}

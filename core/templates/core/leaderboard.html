@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Leaderboard{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block main_content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Leaderboard for OCR models
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Modality</th>
+                    <th>Language</th>
+                    <th>CRR</th>
+                    <th>WRR</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Version</th>
+                    <th>Modality</th>
+                    <th>Language</th>
+                    <th>CRR</th>
+                    <th>WRR</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for model in model_list %}
+                <tr>
+                    <td>V{{ model.version }}</td>
+                    <td>{{ model.modality|title }}</td>
+                    <td>{{ model.language|title }}</td>
+                    <td>{{ model.crr }}</td>
+                    <td>{{ model.wrr }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main_content %}

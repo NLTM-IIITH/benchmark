@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Leaderboard{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block main_content %}
+<div>
+    These are the collection of 3 leaderboards grouped by the modality of the documents
+    (<b>Printed</b>,  <b>Handwritten</b>, <b>SceneText</b>) that is applicable for 13 Indian languages.
+    These leaderboards allow an easy comparison of the performance of different
+    versions of the OCR models.
+    <br>
+    <!-- The Metrics used to measure the performance of the models are <abbr title="Character Recognition Rate">CRR</abbr>
+    and <abbr title="Word Recognition Rate">WRR</abbr>. In simple terms higher number
+    indicates a better performing model. -->
+    The Metric used to measure the performance of the model is <abbr title="Character Recognition Rate">CRR</abbr>. In simple terms higher number
+    indicates a better performing model.
+</div>
+
+<hr>
+<div class="card mb-4 col-9 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        <b>Printed</b> word leaderboard for 4 different versions of models
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center align-middle" rowspan="2">Lanugage</th>
+                    {% for i,v in data.assamese.printed.items %}
+                    {% if v.title %}
+                    <th class="text-center">V{{ i }} ({{ v.title }})</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for i,v in data.assamese.printed.items %}
+                    {% if v.title %}
+                    <th class="text-center">WRR (%)</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i,v in data.items %}
+                <tr>
+                    <td>{{ i|title }}</td>
+                    {% for ii,vv in v.printed.items %}
+                    {% if vv.title %}
+                    <td>{{ vv.wrr }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr>
+<div class="card mb-4 col-9 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        <b>Handwritten</b> word leaderboard for 4 different versions of models
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center align-middle" rowspan="2">Lanugage</th>
+                    {% for i,v in data.assamese.handwritten.items %}
+                    {% if v.title %}
+                    <th class="text-center">V{{ i }} ({{ v.title }})</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for i,v in data.assamese.handwritten.items %}
+                    {% if v.title %}
+                    <th class="text-center">WRR (%)</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i,v in data.items %}
+                <tr>
+                    <td>{{ i|title }}</td>
+                    {% for ii,vv in v.handwritten.items %}
+                    {% if vv.title %}
+                    <td>{{ vv.wrr }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<hr>
+<div class="card mb-4 col-9 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        <b>SceneText</b> word leaderboard for 3 different versions of models
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center align-middle" rowspan="2">Lanugage</th>
+                    <!-- <th class="text-center" colspan="2">V0</th>
+                    <th class="text-center" colspan="2">V1</th>
+                    <th class="text-center" colspan="2">V2</th> -->
+                    <th class="text-center">V0</th>
+                    <th class="text-center">V1</th>
+                    <th class="text-center">V2</th>
+                </tr>
+                <tr>
+                    <!-- <th class="text-center">CRR (%)</th> -->
+                    <th class="text-center">WRR (%)</th>
+                    <!-- <th class="text-center">CRR (%)</th> -->
+                    <th class="text-center">WRR (%)</th>
+                    <!-- <th class="text-center">CRR (%)</th> -->
+                    <th class="text-center">WRR (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i,v in data.items %}
+                <tr>
+                    <td>{{ i|title }}</td>
+                    <td>{{ v.scenetext.0.wrr }}</td>
+                    <!-- <td>{{ v.scenetext.0.wrr }}</td> -->
+                    <td>{{ v.scenetext.1.wrr }}</td>
+                    <!-- <td>{{ v.scenetext.1.wrr }}</td> -->
+                    <td>{{ v.scenetext.2.wrr }}</td>
+                    <!-- <td>{{ v.scenetext.2.wrr }}</td> -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main_content %}

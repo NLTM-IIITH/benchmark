@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Layout Parser API Details{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block custom_js %}
+<script>
+    function randomInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function display_result(ele) {
+        console.log('called from displa');
+        console.log($(ele));
+        $(ele).parent().children('pre').removeClass('d-none');
+        $(ele).addClass('d-none');
+        console.log('2');
+    }
+    $(document).ready(function() {
+        $('.api-button').click(function() {
+            console.log('1');
+            console.log($(this));
+            console.log($(this).children('.fa-spin'));
+            console.log($(this).children('span').html('Loading...'));
+            console.log($(this).children('.fa-spin').removeClass('d-none'));
+            setTimeout(display_result, randomInteger(4000,7000), this);
+        });
+    });
+</script>
+{% endblock %}
+
+
+{% block main_content %}
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>V1</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Version
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>All</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Modality
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>All</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Language
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-info mb-4 text-center">
+            <div class="card-body"><b>Detailed API Specs</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between bg-info">
+                <a class="small text-white stretched-link" href="http://bhasha.iiit.ac.in/layout/docs" target="_blank">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row my-3">
+    <div class="col" style="text-align: justify;">
+		Layout parser facilitates in extracting text from complicated document
+		structure. We developed a web-based API to provide a robust way for any
+		application connect to and use our Layout parser models.
+    </div>
+    <div class="col"></div>
+</div>
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Sample output
+    </div>
+    <div class="card-body text-center">
+		<img src="{% static 'core/assets/img/layout.png' %}" width="900">
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Python code to consume API
+    </div>
+    <div class="card-body">
+        <pre>
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # We use the external "requests" library to perform the API call.
+</span>
+<pre>
+import requests
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # This is the URL to be called for executing the Layout Parser API.
+</span>
+<pre>
+url = "http://bhasha.iiit.ac.in/layout/"
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+	# Images are passed as files param to the request
+</span>
+<pre>
+files=[
+  ('images',('image.jpg',open('image.jpg','rb'),'image/jpeg'))
+]
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # We call the POST method of the url while giving the defined
+    payload and header specifications.
+</span>
+<pre>
+response = requests.post(url, headers={}, data={}, files=files)
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # The ouptut of the request can be parsed into JSON object
+    containing word bounding boxes for each image(s).
+</span>
+<pre>
+print(response.json)
+</pre>
+    </div>
+</div>
+{% endblock main_content %}

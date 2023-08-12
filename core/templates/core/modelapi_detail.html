@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}API Details{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block custom_js %}
+<script>
+    function randomInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function display_result(ele) {
+        console.log('called from displa');
+        console.log($(ele));
+        $(ele).parent().children('pre').removeClass('d-none');
+        $(ele).addClass('d-none');
+        console.log('2');
+    }
+    $(document).ready(function() {
+        $('.api-button').click(function() {
+            console.log('1');
+            console.log($(this));
+            console.log($(this).children('.fa-spin'));
+            console.log($(this).children('span').html('Loading...'));
+            console.log($(this).children('.fa-spin').removeClass('d-none'));
+            setTimeout(display_result, randomInteger(4000,10000), this);
+        });
+    });
+</script>
+{% endblock %}
+
+
+{% block main_content %}
+<div class="row">
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>V{{ model.version }}</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Version
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>{{ model.modality|title }}</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Modality
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-primary  mb-4 text-center">
+            <div class="card-body"><b>{{ model.language|title }}</b></div>
+            <div class="card-footer text-center bg-primary text-white">
+                Model Language
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-info mb-4 text-center">
+            <div class="card-body"><b>Detailed API Specs</b></div>
+            <div class="card-footer d-flex align-items-center justify-content-between bg-info">
+                <a class="small text-white stretched-link" href="http://bhasha.iiit.ac.in/ocr/docs" target="_blank">View Details</a>
+                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row my-3">
+    <div class="col" style="text-align: justify;">
+        The purpose of the this <abbr title="Application Programming Interface">API</abbr> is to provide a programmable mechanism to convert
+        the {{ model.language|title }} {{ model.modality|title }} words to unicode string.
+        <br>
+        This API uses the version-{{ model.version }} model to provide the output
+        for the ocr.
+    </div>
+    <div class="col"></div>
+</div>
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Try API Yourself!
+    </div>
+    <div class="card-body">
+        {% for sample in sample_list %}
+        <div class="row my-2 text-center">
+            <div class="col">
+                <img src="{{ sample.image }}" height="60" style="max-width: 300px;">
+            </div>
+            <div class="col">
+                <img src="{% static 'core/assets/img/ocr-right-arrow.png' %}" height="60">
+            </div>
+            <div class="col h3 text-center">
+                <button class="btn btn-sm btn-outline-primary api-button">
+                    <i class="fa fa-spinner fa-spin d-none"></i>&nbsp;
+                    <span>Execute API!</span>
+                </button>
+                <pre class="d-none">
+
+{{ sample.ocrtext }}
+                </pre>
+            </div>
+        </div>
+        <hr>
+        {% empty %}
+        <div class="text-center">
+            <h2>Coming Soon!</h2>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Python code to consume API
+    </div>
+    <div class="card-body">
+        <pre>
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # We use the external "requests" library to perform the API call.
+</span>
+<pre>
+import requests
+import json
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # This is the URL to be called for executing the model with
+    version-{{ model.version }} and {{ model.modality|title }} modality.
+</span>
+<pre>
+url = "http://bhasha.iiit.ac.in/ocr/infer"
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # This is the payload for the request in JSON format including 
+    image(s) as base64 encoded string.
+</span>
+<pre>
+payload = json.dumps({
+  "imageContent": [ "{base64 encoded image string}" ],
+  "language": "{{ model.language }}",
+  "modality": "{{ model.modality }}",
+  "version": "v{{ model.version }}"
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # We call the POST method of the url while giving the defined
+    payload and header specifications.
+</span>
+<pre>
+response = requests.post(url, headers=headers, data=payload)
+
+</pre>
+<span class="text-muted" style="font-family: monospace; font-size: 14px;">
+    # The ouptut of the request can be parsed into JSON object
+    containing ocr text for each image(s).
+</span>
+<pre>
+print(response.json)
+</pre>
+    </div>
+</div>
+{% endblock main_content %}

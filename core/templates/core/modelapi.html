@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Available OCR APIs{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block main_content %}
+<hr>
+<h3>
+    Printed Word
+</h3>
+<div class="my-3">
+    This class of problems accepts a printed word image and extracts the unicode
+    string that appropriately denotes that word.
+    Here, printed imples that the word is extracted from the scanned printed text.
+    <br>
+    You can find the list of the APIs in the printed-word domain that are
+    currently available in the table below.
+</div>
+<div class="card mb-4 col-8 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Printed word level APIs
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center">Lanugage</th>
+                    <th class="text-center">V2.1 (Robust)</th>
+                    <th class="text-center">V2.2 (Bilingual)</th>
+                    <th class="text-center">V3.1 (Robust)</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Lanugage</th>
+                    <th>V2.1 (Robust)</th>
+                    <th>V2.2 (Bilingual)</th>
+                    <th>V3.1 (Robust)</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for language in language_list %}
+                <tr>
+                    <td>{{ language|title }}</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=printed&version=2.1">More Details</a>
+					</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=printed&version=2.2">More Details</a>
+					</td>
+                    <td>
+                        {% if language in 'assamese,hindi,urdu' %}
+                        N/A
+                        {% else %}
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=printed&version=3.1">More Details</a>
+                        {% endif %}
+					</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<hr>
+<h3>
+    Handwritten Word
+</h3>
+<div class="my-3">
+    This class of problems accepts a handwritten word image and extracts the unicode
+    string that appropriately denotes that word.
+    Here, handwritten imples that the word is extracted from the Handwritten text.
+    <br>
+    You can find the list of the APIs in the handwritten-word domain that are
+    currently available in the table below.
+</div>
+<div class="card mb-4 col-8 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Handwritten word level APIs
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center">Lanugage</th>
+                    <th class="text-center">V1.1 (IITB)</th>
+                    <th class="text-center">V4 (ICFHR)</th>
+                    <th class="text-center">V4.1 (PostCorrection)</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Lanugage</th>
+                    <th>V1.1 (IITB)</th>
+                    <th>V4 (ICFHR)</th>
+                    <th>V4.1 (PostCorrection)</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for language in language_list %}
+                <tr>
+                    <td>{{ language|title }}</td>
+                    <td>
+                        {% if language in 'assamese,kannada,malayalam,manipuri,marathi,tamil' %}
+                        N/A
+                        {% else %}
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=handwritten&version=1.1">More Details</a>
+                        {% endif %}
+					</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=handwritten&version=4">More Details</a>
+					</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=handwritten&version=4.1">More Details</a>
+					</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<hr>
+<h3>
+    Scenetext Word
+</h3>
+<div class="my-3">
+    This class of problems accepts a scenetext word image and extracts the unicode
+    string that appropriately denotes that word.
+    Here, scenetext imples that the word is extracted from the natural scenetext image.
+    <br>
+    You can find the list of the APIs in the scenetext-word domain that are
+    currently available in the table below.
+</div>
+<div class="card mb-4 col-8 mx-auto">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        SceneText word level APIs
+    </div>
+    <div class="card-body">
+        <table class="datatablesSimple text-center" style="font-size: 18px;">
+            <thead>
+                <tr>
+                    <th class="text-center">Lanugage</th>
+                    <th class="text-center">V0</th>
+                    <th class="text-center">V1</th>
+                    <th class="text-center">V2</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Lanugage</th>
+                    <th>V0</th>
+                    <th>V1</th>
+                    <th>V2</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for language in language_list %}
+                <tr>
+                    <td>{{ language|title }}</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=scenetext&version=0">More Details</a>
+					</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=scenetext&version=1">More Details</a>
+					</td>
+                    <td>
+						<a href="{% url 'core:api-detail' %}?language={{ language }}&modality=scenetext&version=2">More Details</a>
+					</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock main_content %}

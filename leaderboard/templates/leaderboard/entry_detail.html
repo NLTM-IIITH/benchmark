@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Leaderboards{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Leaderboard</li>
+</ol>
+{% endblock %}
+
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+    $('#leaderboardTable').DataTable({
+      info: false,
+    });
+  });
+</script>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <table class="table" id="leaderboardTable">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>GT</th>
+        <th>OCR</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in data_list %}
+      <tr>
+        <td>
+          <img src="data:image/jpeg;base64,{{ data.image }}" height="90">
+        </td>
+        <td class="display-4">{{ data.gt }}</td>
+        <td class="display-4">{{ data.ocr }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock main_content %}

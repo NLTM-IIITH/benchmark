@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Dataset Detail{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb mb-4">
+  <li class="breadcrumb-item"><a href="{% url 'dataset:list' %}">Dataset</a></li>
+  <li class="breadcrumb-item active">{{ dataset.name }} ({{ dataset.language }})</li>
+</ol>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Model</th>
+        <th>Last Evaluated</th>
+        <th>CRR (%)</th>
+        <th>WRR (%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in dataset.entries.all %}
+      <tr>
+        <td>{{ entry.id }}</td>
+        <td>
+          <a href="{{ entry.model.get_absolute_url }}">{{ entry.model }}</a>
+        </td>
+        <td>{{ entry.modified }}</td>
+        <td>{{ entry.crr }}</td>
+        <td>{{ entry.wrr }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

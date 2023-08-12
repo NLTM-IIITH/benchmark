@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_title %}Model{% endblock %}
+
+{% block breadcrumb %}
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item active">Model</li>
+</ol>
+{% endblock %}
+
+{% block main_content %}
+<div class="container">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Modality</th>
+        <th>Language</th>
+        <th>Version</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for model in model_list %}
+      <tr>
+        <td>{{ model.id }}</td>
+        <td>{{ model.modality }}</td>
+        <td>{{ model.language }}</td>
+        <td>{{ model.version }}</td>
+        <td><a href="{{ model.get_absolute_url }}">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock main_content %}

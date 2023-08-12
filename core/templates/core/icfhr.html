@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Leaderboard{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+
+{% block main_content %}
+<form action="" method="post" enctype="multipart/form-data">
+  <select name="teamname">
+    <option>IIITH</option>
+    <option>IITD</option>
+    <option>CDAC</option>
+  </select>
+  <input type="file" name="result" id="id-result">
+  <input type="file" name="model" id="id-model">
+  <input type="submit" class="btn btn-success">
+</form>
+{% endblock main_content %}
