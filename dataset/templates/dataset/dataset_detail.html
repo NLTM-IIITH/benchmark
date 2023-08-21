@@ -10,9 +10,19 @@
 </ol>
 {% endblock %}
 
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+    $('#dataset_detail_table').DataTable({
+      info: false,
+    });
+  });
+</script>
+{% endblock %}
+
 {% block main_content %}
 <div class="container">
-  <table class="table">
+  <table class="table" id='dataset_detail_table'>
     <thead>
       <tr>
         <th>ID</th>
@@ -23,11 +33,12 @@
       </tr>
     </thead>
     <tbody>
-      {% for entry in dataset.entries.all %}
+      {% for entry in dataset.entries.all%}
+      
       <tr>
         <td>{{ entry.id }}</td>
         <td>
-          <a href="{{ entry.model.get_absolute_url }}">{{ entry.model }}</a>
+          <a href="{{ entry.model.get_absolute_url }}">{{ entry.model}}</a>
         </td>
         <td>{{ entry.modified }}</td>
         <td>{{ entry.crr }}</td>
@@ -36,5 +47,17 @@
       {% endfor %}
     </tbody>
   </table>
+  {% comment %} <a href="{% url 'dataset:on_submit' id=dataset.id lang=dataset.language modality=dataset.modality %} onclick="return evaluateClicked()"">Evaluate</a> {% endcomment %}
+  <a href="#" onclick="return evaluateClicked({{ pk }});">Evaluate</a>
+
+    <script>
+        function evaluateClicked(pk) {
+            var confirmation = confirm("Are you sure you want to evaluate?");
+            if (confirmation) {
+                window.location.href = "{% url 'dataset:on_submit' id=dataset.id lang=dataset.language modality=dataset.modality %}";
+            }
+            return false;
+        }
+    </script>
 </div>
 {% endblock %}
