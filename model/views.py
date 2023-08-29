@@ -1,13 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, ListView
 
-from .models import Model
+from .models import Model, ModelVersion
 from leaderboard.models import Entry
 from dataset.models import Dataset
+from core.models import Language,Modality
 
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-
+from django.contrib import messages
 
 class BaseModelView(LoginRequiredMixin):
 	model = Model
@@ -38,3 +39,41 @@ def on_submit(request , id , lang , modality):
 		new_entry = Entry.objects.create(dataset = final_vals[i], model = v_id)
 		new_entry.evaluate()
 	return redirect('model:detail', pk=id)
+
+def add_model(request):
+	if request.method == 'POST':
+		modality = request.POST.get('modality').lower()
+
+		if(len(Modality.objects.filter(name=modality))==0):
+			messages.error(request,"Please enter a valid modality",extra_tags='alert')
+			return redirect('model:list')
+		
+		modality_instance = Modality.objects.get(name=modality)
+		language = request.POST.get('language').lower()
+		if(len(Language.objects.filter(name=language))==0):
+			messages.error(request,"Please enter a valid Language",extra_tags='alert')
+			return redirect('model:list')
+		language_instance = Language.objects.get(name=language)
+		version = request.POST.get('version').lower()
+		if(len(ModelVersion.objects.filter(name=version))==0):
+			messages.error(request,"Please enter a valid version",extra_tags='alert')
+			return redirect('model:list')
+		version_instance = ModelVersion.objects.get(name=version)
+		# print(language_instance,modality_instance,version_instance)
+		obj = Model.objects.filter(language__name=language, modality__name=modality,version__name=version)
+		if obj.count() == 0:
+			model = Model(
+				version = version_instance,
+				language = language_instance,
+				modality = modality_instance
+			)
+			model.save()
+			messages.success(request,"Model Added",extra_tags='alert')
+			return redirect('model:list')
+		else:
+			messages.error(request, 'This model already exists',extra_tags='alert')
+			return redirect('model:list')  
+		
+		# return HttpResponse ('Model already exists. Please go back')
+
+	

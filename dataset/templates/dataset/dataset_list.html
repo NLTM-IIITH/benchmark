@@ -4,12 +4,106 @@
 {% block page_title %}Dataset{% endblock %}
 
 {% block breadcrumb %}
+
 <ol class="breadcrumb mb-4">
+  <style>
+    .modal-dialog {
+    
+              width: 400px;
+    
+              height:900px !important;
+    
+            }
+    
+    .modal-content {
+    
+        height: 60%;
+    
+    }     
+    input[type=file]::file-selector-button {
+      margin-right: 20px;
+      border: none;
+      background: #084cdf;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: background .2s ease-in-out;
+    }
+    
+    input[type=file]::file-selector-button:hover {
+      background: #0d45a5;
+    }
+  </style>
     <li class="breadcrumb-item active">Dataset</li>
+    <button id="add_datasetButton" style='margin-left:800px'>Add Dataset</button>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+      <div class="modal-dialog custom-modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <form method="post" action="{% url 'dataset:add_dataset' %}" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <label for="name">Name:</label><br>
+                      <input type="text" id="name" name="name" required><br>
+                      <label for="modality">Modality:</label><br>
+                      <input type="text" id="modality" name="modality" required>
+                      <br>
+                      <label for="language">Language:</label><br>
+                      <input type="text" id="language" name="language" required><br>
+
+                      <label for="description">Description:</label><br>
+                      <input type="text" id="description" name="description"><br><br>
+
+                      <input type="checkbox" id="good_quality" name="tags" value="good_quality">
+                      <label for="good_quality"> good quality</label><br>
+                      <input type="checkbox" id="word" name="tags" value="word">
+                      <label for="word"> Word</label><br>
+                      <input type="checkbox" id="line" name="tags" value="line">
+                      <label for="line"> line</label><br>
+                      <input type="checkbox" id="rohitha_benchmark" name="tags" value="rohitha_benchmark">
+                      <label for="rohitha_benchmark"> rohitha_benchmark</label><br>
+                      <input type="checkbox" id="poor_quality" name="tags" value="poor_quality">
+                      <label for="poor_quality"> poor quality</label><br><br>
+                      
+                      <label for="photo">Upload dataset</label>
+
+                      <input 
+                        type="file"
+                        id="photo" 
+                        name="photo"
+                        accept=".zip"
+                      required>
+                      <br><br>
+                      <input type="submit" class="btn btn-primary" value="Submit" style:" border-radius: 10px;">
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+
+    <script>
+        document.getElementById("add_datasetButton").addEventListener("click", function() {
+          $('#formModal').modal('show');
+        });
+    </script>
+
 </ol>
+
 {% endblock %}
 
+
+
 {% block main_content %}
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+  <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+    {{ message }}
+  </div>
+{% endfor %}
+</div>
+{% endif %}
 <div class="container">
   <table class="table">
     <thead>
@@ -36,4 +130,6 @@
     </tbody>
   </table>
 </div>
+
+
 {% endblock main_content %}

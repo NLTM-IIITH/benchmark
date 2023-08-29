@@ -1,15 +1,87 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block page_title %}Model{% endblock %}
+{% block page_title %}Model
+{% endblock %}
 
 {% block breadcrumb %}
 <ol class="breadcrumb mb-4">
+  <style>
+    .modal-dialog {
+    
+              width: 400px;
+    
+              height:700px !important;
+    
+            }
+    
+    .modal-content {
+    
+        height: 60%;
+    
+    }     
+    input[type=file]::file-selector-button {
+      margin-right: 20px;
+      border: none;
+      background: #084cdf;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #fff;
+      cursor: pointer;
+      transition: background .2s ease-in-out;
+    }
+    
+    input[type=file]::file-selector-button:hover {
+      background: #0d45a5;
+    }
+  </style>
     <li class="breadcrumb-item active">Model</li>
+    <button id="add_datasetButton" style='margin-left:800px'>Add Model</button>
+
+    <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
+      <div class="modal-dialog custom-modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <form method="post" action="{% url 'model:add_model' %}" >
+                      {% csrf_token %}
+                      
+                      <label for="modality">Modality:</label><br>
+                      <input type="text" id="modality" name="modality" required>
+                      <br>
+                      <label for="language">Language:</label><br>
+                      <input type="text" id="language" name="language" required><br>
+
+                      <label for="version">Version:</label><br>
+                      <input type="text" id="version" name="version" required><br><br>
+
+                     
+                      <input type="submit" class="btn btn-primary" value="Submit" style:" border-radius: 10px;">
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+
+    <script>
+        document.getElementById("add_datasetButton").addEventListener("click", function() {
+          $('#formModal').modal('show');
+        });
+    </script>
+
 </ol>
 {% endblock %}
 
 {% block main_content %}
+  
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+  <div class="alert {% if message.tags %}alert-{{ message.tags }}"{% endif %}>
+    {{ message }}
+  </div>
+{% endfor %}
+</div>
+{% endif %}
 <div class="container">
   <table class="table">
     <thead>

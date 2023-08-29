@@ -7,6 +7,7 @@
 <ol class="breadcrumb mb-4">
   <li class="breadcrumb-item"><a href="{% url 'dataset:list' %}">Dataset</a></li>
   <li class="breadcrumb-item active">{{ dataset.name }} ({{ dataset.language }})</li>
+  <li class="breadcrumb-item active">{{dataset.description}}</li>
 </ol>
 {% endblock %}
 

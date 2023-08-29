@@ -9,7 +9,10 @@ from core.models import BaseModel
 
 
 class Dataset(BaseModel):
-	
+	description = models.TextField(
+		default='No description available',
+		help_text='Description of the model',
+	)
 	name = models.CharField(
 		max_length=100,
 		default='',
