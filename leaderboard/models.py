@@ -122,6 +122,9 @@ class Entry(BaseModel):
 				cer.append(0)
 			else:
 				cer.append(edit_distance(i['gt'], i['ocr'])/len(i['gt']))
+
+		print(cer)
+		print(wrr)
 		self.crr = round(100-sum(cer)*100/len(cer), 2)
 		self.wrr = round(sum(wrr)*100/len(wrr), 2)
 		tmp = TemporaryDirectory(prefix='json')

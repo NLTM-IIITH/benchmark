@@ -11,7 +11,7 @@
     
               width: 400px;
     
-              height:900px !important;
+              height:1000px !important;
     
             }
     
@@ -46,11 +46,22 @@
                       {% csrf_token %}
                       <label for="name">Name:</label><br>
                       <input type="text" id="name" name="name" required><br>
-                      <label for="modality">Modality:</label><br>
-                      <input type="text" id="modality" name="modality" required>
-                      <br>
-                      <label for="language">Language:</label><br>
-                      <input type="text" id="language" name="language" required><br>
+                      <br><label for="modality">Modality: </label>
+                      <select name="modality" id="modality" required>
+                        {%for mod in mod_list%}
+                        <option value={{mod}}>{{mod}}</option>
+                        {%endfor%}
+                      </select>
+                      <br><br>
+                      <label for="language">Language: </label>
+                    
+                      <select name="language" id="language" required>
+                        {%for lang in lang_list%}
+                        {{lang}}
+                        <option value={{lang}}>{{lang}}</option>
+                        {%endfor%}
+                      </select>
+                      <br><br>
 
                       <label for="description">Description:</label><br>
                       <input type="text" id="description" name="description"><br><br>

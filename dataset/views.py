@@ -12,6 +12,7 @@ from django.http import HttpResponse
 from django.core.files import File
 from django.contrib import messages
 from django.core.files.base import ContentFile
+from django.urls import reverse_lazy
 
 import zipfile
 import pathlib
@@ -29,7 +30,13 @@ class BaseDatasetView(LoginRequiredMixin):
 	navigation = 'dataset'
 
 class DatasetListView(BaseDatasetView, ListView):
-    pass
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context["lang_list"] = Language.objects.all()
+		context["mod_list"]=Modality.objects.all()
+		return context
+	pass
 
 	
     
@@ -37,26 +44,6 @@ class DatasetListView(BaseDatasetView, ListView):
 
 class DatasetDetailView(BaseDatasetView, DetailView):
 
-
-	# Below code can be used for sorting from backend. Use <a href="?order_by=crr">CRR (%)</a> in the frontend
-
-
-	# model = Dataset
-	# template_name = 'dataset/dataset_detail.html'
-	# context_object_name = 'dataset'
-	# def get_context_data(self, **kwargs):
-	# 	context = super().get_context_data(**kwargs)
-	# 	order_by = self.request.GET.get('order_by', 'defaultOrderField')
-	# 	if(order_by == 'crr'):
-	# 		items = Entry.objects.filter(dataset=context['dataset']).order_by('crr')
-	# 	elif(order_by == 'wrr'):
-	# 		items = Entry.objects.filter(dataset=context['dataset']).order_by('wrr')
-	# 	else:
-	# 		items = Entry.objects.filter(dataset=context['dataset']).order_by('?')
-
-	# 	context['items'] = items
-	# 	context['order_by'] = order_by
-	# 	return context
 	pass
 
 
@@ -126,12 +113,11 @@ def add_dataset(request):
 				
 				# Create the subdirectory for extraction
 				os.makedirs(extract_folder)
-				print(extract_folder,"**")
 				# Extract the contents of the zip file into the subdirectory
 				with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
-					print(uploaded_file)
+					# print(uploaded_file)
 					zip_ref.extractall(extract_folder)
-					print("ok")
+					# print("ok")
 			
 
 				temp_inner_folder = os.listdir(target_folder)[0]
@@ -203,4 +189,11 @@ def add_dataset(request):
 		dataset.save()
 
 		return redirect('dataset:list')
-		
+	
+def delete_entry(request, entry_id, entry_model, dataset_id):
+	delEntry = Entry.objects.filter(id=entry_id)
+	delEntry.delete()
+	messages.info(request, f'Entry with the name {entry_model} has been deleted',extra_tags='alert')
+	return redirect('dataset:detail',pk=dataset_id)
+
+
