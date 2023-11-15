@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block page_title %}Dataset{% endblock %}
+{% block page_title %}Benchmarks{% endblock %}
 
 {% block breadcrumb %}
 
@@ -35,8 +35,8 @@
       background: #0d45a5;
     }
   </style>
-    <li class="breadcrumb-item active">Dataset</li>
-    <button id="add_datasetButton" style='margin-left:800px'>Add Dataset</button>
+    <li class="breadcrumb-item active">Benchmarks</li>
+    <button id="add_datasetButton" style='margin-left:800px'>Add Benchmark</button>
 
     <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
       <div class="modal-dialog custom-modal-dialog" role="document">
@@ -119,7 +119,6 @@
   <table class="table">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Name</th>
         <th>Modality</th>
         <th>Language</th>
@@ -130,8 +129,7 @@
     <tbody>
       {% for dataset in dataset_list %}
       <tr>
-        <td>{{ dataset.id }}</td>
-        <td>{{ dataset.name }}</td>
+        <td>{{ dataset }}</td>
         <td>{{ dataset.modality }}</td>
         <td>{{ dataset.language }}</td>
         <td>{{ dataset.get_tags }}</td>

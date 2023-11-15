@@ -1,29 +1,29 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView, ListView
-
-from .models import Dataset
-from leaderboard.models import Entry
-from dataset.models import Dataset,DatasetTag
-from model.models import Model
-from core.models import Language,Modality
-
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.core.files import File
-from django.contrib import messages
-from django.core.files.base import ContentFile
-from django.urls import reverse_lazy
-
-import zipfile
-import pathlib
-import os
-from PIL import Image
 import base64
 import json
-import tempfile
+import os
+import pathlib
 import shutil
-
+import tempfile
+import zipfile
 from contextlib import contextmanager
+
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files import File
+from django.core.files.base import ContentFile
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import DetailView, ListView
+from PIL import Image
+
+from core.models import Language, Modality
+from dataset.models import Dataset, DatasetTag
+from leaderboard.models import Entry
+from model.models import Model
+
+from .models import Dataset
+
 
 class BaseDatasetView(LoginRequiredMixin):
 	model = Dataset
@@ -153,7 +153,7 @@ def add_dataset(request):
 					my_string = ''
 					word=''
 					pa = os.path.join(inner_folder_path, i)
-					if (i.endswith('.jpg')):
+					if (i.endswith('.jpg') or i.endswith('jpeg')):
 							im = Image.open(pa)
 							with open(pa, "rb") as img_file:
 								binary_file_data = img_file.read()
@@ -163,7 +163,7 @@ def add_dataset(request):
 						messages.error(request,"Image does not end with .jpg")
 					
 					if (os.path.exists(pa)):
-							word=gt_dict[i]
+							word=gt_dict[i].strip()
 					# print(my_string,word)
 					res_dict = {"image":my_string, "gt":word}
 					res.append(res_dict)

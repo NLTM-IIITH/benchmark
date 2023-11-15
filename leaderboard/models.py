@@ -110,7 +110,8 @@ class Entry(BaseModel):
 		t = time.time()
 		try:
 			data = self.infer_ocr()
-		except:
+		except Exception as e:
+			print(e)
 			print('Error while performing OCR')
 			return None
 		print(f'Completed the OCR Inference in {time.time()-t} seconds')
@@ -122,9 +123,6 @@ class Entry(BaseModel):
 				cer.append(0)
 			else:
 				cer.append(edit_distance(i['gt'], i['ocr'])/len(i['gt']))
-
-		print(cer)
-		print(wrr)
 		self.crr = round(100-sum(cer)*100/len(cer), 2)
 		self.wrr = round(sum(wrr)*100/len(wrr), 2)
 		tmp = TemporaryDirectory(prefix='json')
@@ -135,3 +133,4 @@ class Entry(BaseModel):
 			save=False
 		)
 		self.save()
+		print(self, self.crr, self.wrr)

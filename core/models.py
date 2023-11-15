@@ -43,3 +43,12 @@ class Modality(BaseModel):
 
 	def __repr__(self) -> str:
 		return f'<Modality: {str(self)}>'
+
+	@property
+	def get_short_name(self) -> str:
+		if self.name == 'printed':
+			return 'p'
+		elif self.name == 'handwritten':
+			return 'hw'
+		else:
+			return 'st'

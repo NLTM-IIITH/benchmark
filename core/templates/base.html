@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="Krishna Tulsyan" />
-    <title>Bhashini IIITH</title>
+    <title>Benchmark Leaderboard</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="{% static 'core/css/styles.css' %}" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -17,7 +17,7 @@
   <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
       <!-- Navbar Brand-->
-      <a class="navbar-brand ps-3" href="{% url 'core:index' %}">Bhashini IIITH</a>
+      <a class="navbar-brand ps-3" href="{% url 'core:index' %}">Benchmark</a>
       <!-- Sidebar Toggle-->
       <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
       <!-- Navbar Search-->
@@ -60,16 +60,16 @@
               </a>
               <a class="nav-link {% if view.navigation == 'dataset' %}active{% endif %}" href="{% url 'dataset:list' %}">
                 <div class="sb-nav-link-icon"><i class="fas fa-database"></i></div>
-                Datasets
+                Benchmark
               </a>
               <a class="nav-link {% if view.navigation == 'model' %}active{% endif %}" href="{% url 'model:list' %}">
                 <div class="sb-nav-link-icon"><i class="fas fa-database"></i></div>
                 Model
               </a>
-              <a class="nav-link" href="http://bhasha.iiit.ac.in/dococr/" target="_blank">
+              {% comment %} <a class="nav-link" href="http://bhasha.iiit.ac.in/dococr/" target="_blank">
                 <div class="sb-nav-link-icon"><i class="fas fa-external-link-alt"></i></div>
                 DocumentOCR Demo
-              </a>
+              </a> {% endcomment %}
             </div>
           </div>
           <div class="sb-sidenav-footer">

@@ -52,12 +52,16 @@ class Model(BaseModel):
 class ModelVersion(BaseModel):
 	name = models.CharField(
 		default='',
-		max_length=20,
+		max_length=50,
 		unique=True,
+	)
+	display_name = models.CharField(
+		default='',
+		max_length=50,
 	)
 
 	def __str__(self) -> str:
-		return f'{self.name}'
+		return f'{self.display_name}'
 
 	def __repr__(self) -> str:
 		return f'<ModelVersion: {str(self)}>'

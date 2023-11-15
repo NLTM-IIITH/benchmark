@@ -36,7 +36,6 @@ class OCRAPI:
 		headers = {
 			'Content-Type': 'application/json'
 		}
-		print(f'Performing OCR using API at: {url}')
 		response = requests.post(
 			url,
 			headers=headers,
