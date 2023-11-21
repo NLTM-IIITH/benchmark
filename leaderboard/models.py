@@ -12,6 +12,7 @@ from nltk.metrics.distance import edit_distance
 
 from api.ocr import OCRAPI
 from core.models import BaseModel
+from .managers import EntryQuerySet
 
 
 class Entry(BaseModel):
@@ -60,6 +61,8 @@ class Entry(BaseModel):
 			FileExtensionValidator(['json'])
 		]
 	)
+	
+	objects = EntryQuerySet.as_manager()
 
 	class Meta:
 		default_related_name = 'entries'

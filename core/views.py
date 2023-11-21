@@ -75,6 +75,9 @@ class IndexView(BaseCoreView, ListView):
 	navigation = 'index'
 	model = Model
 
+	def get(self, request, *args, **kwargs):
+		return redirect('dataset:list')
+
 
 class LayoutAPIView(BaseCoreView, TemplateView):
 	template_name = 'core/layout_api.html'

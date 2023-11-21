@@ -40,7 +40,7 @@
         <th>Last Evaluated</th>
         <th>CRR (%)</th>
         <th>WRR (%)</th>
-        <th>Delete model</th>
+        <th>Details</th>
       </tr>
     </thead>
     <tbody>
@@ -54,7 +54,8 @@
         <td>{{ entry.modified }}</td>
         <td>{{ entry.crr }}</td>
         <td>{{ entry.wrr }}</td>
-        <td> <a href='{% url 'dataset:delete_entry' entry_id=entry.id  entry_model=entry.model dataset_id=dataset.id%}'>Delete</a></td>
+        <!-- <td> <a href='{% url 'dataset:delete_entry' entry_id=entry.id  entry_model=entry.model dataset_id=dataset.id%}'>View</a></td> -->
+        <td> <a href='{{ entry.get_absolute_url }}'>View</a></td>
       </tr>
       {% endfor %}
     </tbody>
