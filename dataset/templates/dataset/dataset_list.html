@@ -35,8 +35,8 @@
       background: #0d45a5;
     }
   </style>
-    <li class="breadcrumb-item active">Benchmarks</li>
-    <button id="add_datasetButton" style='margin-left:800px'>Add Benchmark</button>
+    <!-- <li class="breadcrumb-item active">Benchmarks</li> -->
+    <!-- <button id="add_datasetButton" style='margin-left:800px'>Add Benchmark</button> -->
 
     <div class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="formModalLabel" aria-hidden="true">
       <div class="modal-dialog custom-modal-dialog" role="document">
@@ -105,6 +105,21 @@
 
 
 
+{% block custom_js %}
+<script>
+  $(document).ready(function() {
+    $('#dataset_list_table').DataTable({
+      info: false,
+      order: [[1, "asc"]],
+      columnDefs: [{
+        targets: [0, 4],
+        orderable: false
+      }]
+    });
+  });
+</script>
+{% endblock %}
+
 {% block main_content %}
 {% if messages %}
 <div class="messages">
@@ -116,13 +131,13 @@
 </div>
 {% endif %}
 <div class="container">
-  <table class="table">
+  <table class="table table-hover order-column" id="dataset_list_table">
     <thead>
       <tr>
         <th>Name</th>
         <th>Modality</th>
         <th>Language</th>
-        <!-- <th>Tags</th> -->
+        <th># of API Entries</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -132,6 +147,7 @@
         <td>{{ dataset }}</td>
         <td>{{ dataset.modality }}</td>
         <td>{{ dataset.language }}</td>
+        <td>{{ dataset.entries.count }}</td>
         <!-- <td>{{ dataset.get_tags }}</td> -->
         <td><a href="{{ dataset.get_absolute_url }}">View</a></td>
       </tr>

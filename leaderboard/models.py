@@ -45,6 +45,7 @@ class Entry(BaseModel):
 			MinValueValidator(0.0),
 		],
 	)
+	rank = models.IntegerField(default=0)
 	file = models.FileField(
 		null=True,
 		blank=True,

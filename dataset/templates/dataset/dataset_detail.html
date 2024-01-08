@@ -16,6 +16,11 @@
   $(document).ready(function() {
     $('#dataset_detail_table').DataTable({
       info: false,
+      order: [[5, "asc"]],
+      columnDefs: [{
+        targets: [1, 6],
+        orderable: false
+      }]
     });
   });
 </script>
@@ -32,14 +37,15 @@
 </div>
 {% endif %}
 <div class="container">
-  <table class="table" id='dataset_detail_table'>
+  <table class="table table-hover table-striped order-column" id='dataset_detail_table'>
     <thead>
-      <tr>
-        <th>ID</th>
-        <th>Model</th>
-        <th>Last Evaluated</th>
+      <tr style="vertical-align: middle;">
+        <th>Entry ID</th>
+        <th>API</th>
+        <th>API Available Since</th>
         <th>CRR (%)</th>
         <th>WRR (%)</th>
+        <th>Rank <br><small class="text-muted" style="font-weight: 100; font-size: smaller;">(Based on WRR)</small></th>
         <th>Details</th>
       </tr>
     </thead>
@@ -51,9 +57,10 @@
         <td>
           <a href="{{ entry.model.get_absolute_url }}">{{ entry.model}}</a>
         </td>
-        <td>{{ entry.modified }}</td>
+        <td>{{ entry.model.available_since|default_if_none:"N/A" }}</td>
         <td>{{ entry.crr }}</td>
         <td>{{ entry.wrr }}</td>
+        <td>{{ entry.rank }}</td>
         <!-- <td> <a href='{% url 'dataset:delete_entry' entry_id=entry.id  entry_model=entry.model dataset_id=dataset.id%}'>View</a></td> -->
         <td> <a href='{{ entry.get_absolute_url }}'>View</a></td>
       </tr>
@@ -61,7 +68,7 @@
     </tbody>
   </table>
   {% comment %} <a href="{% url 'dataset:on_submit' id=dataset.id lang=dataset.language modality=dataset.modality %} onclick="return evaluateClicked()"">Evaluate</a> {% endcomment %}
-  <a href="#" onclick="return evaluateClicked({{ pk }});">Evaluate</a>
+  <!-- <a href="#" onclick="return evaluateClicked({{ pk }});">Evaluate</a> -->
 
     <script>
         function evaluateClicked(pk) {

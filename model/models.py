@@ -20,6 +20,11 @@ class Model(BaseModel):
 		'core.Modality',
 		on_delete=models.RESTRICT,
 	)
+	available_since = models.DateField(
+		null=True,
+		blank=True,
+		default=None
+	)
 
 	class Meta:
 		default_related_name = 'models'
