@@ -79,43 +79,50 @@ def on_submit(request, id, lang, modality):
 	return redirect('dataset:detail',pk=id)
 
 def add_dataset(request):
-	res =[]
-	if(request.method == 'POST'): 
+	res = []
+	if request.method == 'POST':
 		form = request.POST
 		
-		name = request.POST.get('name')
+		name = form.get('name')
 		modality = form.get('modality').lower()
-		if(len(Modality.objects.filter(name=modality))==0):
-			messages.error(request,"Please enter a valid modality",extra_tags='alert')
-			return redirect('dataset:list')
-		modality_instance = Modality.objects.get(name=modality)
 		language = form.get('language').lower()
-		if(len(Language.objects.filter(name=language))==0):
-			messages.error(request,"Please enter a valid Language",extra_tags='alert')
-			return redirect('dataset:list')
-		language_instance = Language.objects.get(name=language)
 		description = form.get('description')
-		tag_names = request.POST.getlist('tags')
-		# print(request.FILES)
+		tag_names = form.getlist('tags')
 		uploaded_file = request.FILES['photo']
-		# print(uploaded_file)
 
-		details = Dataset.objects.all().values()
-		for i in details:
-			if((i['name']==form['name'])):
-				lang_id = Language.objects.filter(name=language).values()[0]['id']
-				mod_id =Modality.objects.filter(name=modality).values()[0]['id']
+		try:
+			modality_instance = Modality.objects.get(name=modality)
+		except:
+			messages.error(
+				request,
+				"Please enter a valid modality",
+				extra_tags='alert'
+			)
+			return redirect('dataset:list')
+		try:
+			language_instance = Language.objects.get(name=language)
+		except:
+			messages.error(
+				request,
+				"Please enter a valid Language",
+				extra_tags='alert'
+			)
+			return redirect('dataset:list')
 
-				if(i['modality_id']==mod_id and i['language_id']==lang_id):
-					messages.warning(request,"Already exists in the database",extra_tags='alert')
-					return redirect('dataset:list')
+		if Dataset.objects.filter(
+			name=name,
+			modality=modality_instance,
+			language=language_instance,
+		).exists():
+			messages.warning(request,"Already exists in the database",extra_tags='alert')
+			return redirect('dataset:list')
+
 		tags = []
 		for tag_name in tag_names:
 			tag, created = DatasetTag.objects.get_or_create(name=tag_name)
 			tags.append(tag)
 
 		if uploaded_file.name.endswith('.zip'):
-			entry=""
 			target_folder = os.path.join('media', 'extracted_files')
 			os.makedirs(target_folder, exist_ok=True)
 			with tempfile.TemporaryDirectory(dir=target_folder) as temp_dir:
@@ -126,21 +133,15 @@ def add_dataset(request):
 				os.makedirs(extract_folder)
 				# Extract the contents of the zip file into the subdirectory
 				with zipfile.ZipFile(uploaded_file, 'r') as zip_ref:
-					# print(uploaded_file)
 					zip_ref.extractall(extract_folder)
-					# print("ok")
-			
 
 				temp_inner_folder = os.listdir(target_folder)[0]
-				
 				temp_inner_folder_path = os.path.join(target_folder ,temp_inner_folder)
 
 				ec = os.listdir(temp_inner_folder_path)[0]
-
 				ec_path = os.path.join(temp_inner_folder_path,ec)
 
 				inner_folder = os.listdir(ec_path)[0]
-
 				inner_folder_path = os.path.join(ec_path, inner_folder)
 				
 				gt_path = os.path.join(inner_folder_path ,os.listdir(inner_folder_path)[0])
@@ -155,27 +156,22 @@ def add_dataset(request):
 						else:
 							print("Line does not have enough elements:", a)
 							messages.info(request,f"Line does not have enough elements:{a}")
-
-				images_path = os.path.join(inner_folder_path ,os.listdir(inner_folder_path)[1])
-				# print(os.listdir(images_path))
-				
 				
 				for i in gt_dict:
 					my_string = ''
 					word=''
 					pa = os.path.join(inner_folder_path, i)
-					if (i.endswith('.jpg') or i.endswith('jpeg')):
-							im = Image.open(pa)
-							with open(pa, "rb") as img_file:
-								binary_file_data = img_file.read()
-								base64_encoded_data = base64.b64encode(binary_file_data)
-								my_string = base64_encoded_data.decode('utf-8')
+					if i.endswith('.jpg') or i.endswith('jpeg'):
+						with open(pa, "rb") as img_file:
+							binary_file_data = img_file.read()
+							base64_encoded_data = base64.b64encode(binary_file_data)
+							my_string = base64_encoded_data.decode('utf-8')
 					else:
 						messages.error(request,"Image does not end with .jpg")
 					
-					if (os.path.exists(pa)):
-							word=gt_dict[i].strip()
-					# print(my_string,word)
+					if os.path.exists(pa):
+						word=gt_dict[i].strip()
+
 					res_dict = {"image":my_string, "gt":word}
 					res.append(res_dict)
 		# print(res)
