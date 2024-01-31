@@ -1,19 +1,13 @@
 import base64
 import json
 import os
-import pathlib
-import shutil
 import tempfile
 import zipfile
-from contextlib import contextmanager
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
-from django.core.files.base import ContentFile
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
 from PIL import Image
 
@@ -36,14 +30,9 @@ class DatasetListView(BaseDatasetView, ListView):
 		context["lang_list"] = Language.objects.all()
 		context["mod_list"]=Modality.objects.all()
 		return context
-	pass
-
-	
-    
 
 
 class DatasetDetailView(BaseDatasetView, DetailView):
-
 	pass
 
 
