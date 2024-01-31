@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_content %}
+<div class="container-fluid mt-2">
+  <form method="post">
+    {% csrf_token %}
+    <div class="row row-cols-1 row-cols-md-1 g-4">
+      {% for word in word_list %}
+      <div class="col">
+        {% if is_malayalam %}
+        <div class="card h-100 text-center" style="width: 250px;">
+        {% else %}
+        <div class="card h-100 text-center" style="width: 100px;">
+        {% endif %}
+          <a href="{{ word.image.url }}" target="_blank">
+            <img src="{{ word.image.url }}" height="50px" width="50px" class="card-img-top" alt="...">
+          </a>
+          <div class="card-body p-1">
+            <hr class="my-1">
+            <h5 class="card-title mb-0">{{ word.ocr }}</h5>
+          </div>
+          <div class="card-footer p-0 py-1">
+            <div class="form-check form-check-inline mr-1">
+              <input class="form-check-input" style="border: 2px solid green;" type="radio" name="{{ word.id }}"
+                value="correct" checked>
+            </div>
+            <div class="form-check form-check-inline mr-1">
+              <input class="form-check-input" style="border: 2px solid red;" type="radio" name="{{ word.id }}" value="wrong">
+            </div>
+            <div class="form-check form-check-inline mr-1">
+              <input class="form-check-input" style="border: 2px solid #ffc107;" type="radio" name="{{ word.id }}"
+                value="skip">
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <center class="pt-4">
+        <h2>No Words assigned. Please contact Admin</h2>
+      </center>
+      {% endfor %}
+    </div>
+    {% if words.count > 0 %}
+    <div class="row mt-2">
+      <center>
+        <input type="submit" class="btn btn-success">
+      </center>
+    </div>
+    {% endif %}
+  </form>
+</div>
+{% endblock main_content %}

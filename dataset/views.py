@@ -36,6 +36,18 @@ class DatasetDetailView(BaseDatasetView, DetailView):
 	pass
 
 
+class DatasetVerifyView(DatasetDetailView):
+	template_name = 'dataset/verify.html'
+
+	def get_context_data(self, **kwargs):
+		dataset = self.get_object()
+		with open(dataset.file.path, 'r', encoding='utf-8') as f:
+			kwargs.update({
+				'word_list': json.loads(f.read())
+			})
+		return super().get_context_data(**kwargs)
+
+
 def on_submit(request, id, lang, modality):
 	mod = Model.objects.filter(language__name = lang.lower(),modality__name=modality.lower())
 	f_ds = Dataset.objects.filter(id = id)
