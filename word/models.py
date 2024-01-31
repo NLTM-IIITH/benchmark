@@ -13,8 +13,8 @@ User = get_user_model()
 
 def get_image_path(instance, filename):
 	return join(
-		instance.category,
-		instance.language,
+		'Words',
+		str(instance.dataset.id),
 		filename
 	)
 

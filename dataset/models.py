@@ -1,8 +1,9 @@
 import base64
 import json
 import os
-import tempfile
 import zipfile
+from os.path import basename, join
+from tempfile import TemporaryDirectory
 
 from django.core.files import File
 from django.core.validators import FileExtensionValidator
@@ -13,6 +14,7 @@ from django.urls import reverse_lazy
 from tqdm import tqdm
 
 from core.models import BaseModel, Language, Modality
+from word.models import Word
 
 
 class Dataset(BaseModel):
@@ -65,6 +67,27 @@ class Dataset(BaseModel):
 			self.version,
 		)
 
+	def populate_word_model(self):
+		with open(self.file.path, 'r', encoding='utf-8') as f:
+			words = json.loads(f.read())
+		if self.words.count() == len(words):
+			return None
+		print(f'Creating {len(words)} word model instances')
+		tmp = TemporaryDirectory()
+		word_list = []
+		for i, v in tqdm(enumerate(words)):
+			img_path = join(tmp.name, f'{i}.jpg')
+			with open(img_path, 'wb') as f:
+				f.write(base64.b64decode(v['image']))
+			w = Word(ocr=v['gt'], dataset=self)
+			w.image.save(
+				basename(img_path),
+				File(open(img_path, 'rb')),
+				save=False
+			)
+			word_list.append(w)
+		Word.objects.bulk_create(word_list)
+
 	def get_absolute_url(self):
 		return reverse_lazy("dataset:detail", kwargs={"pk": self.pk})
 
@@ -76,12 +99,12 @@ class Dataset(BaseModel):
 		modality = Modality.objects.get(name=modality.lower().strip())
 		language = Language.objects.get(name=language.lower().strip())
 
-		target_folder = os.path.join('media', 'extracted_files')
+		target_folder = join('media', 'extracted_files')
 		os.makedirs(target_folder, exist_ok=True)
 		res = []
-		with tempfile.TemporaryDirectory(dir=target_folder) as temp_dir:
+		with TemporaryDirectory(dir=target_folder) as temp_dir:
 			# Combine the temporary directory path with a unique name for the extraction subfolder
-			extract_folder = os.path.join(temp_dir, "extracted_contents")
+			extract_folder = join(temp_dir, "extracted_contents")
 			
 			# Create the subdirectory for extraction
 			os.makedirs(extract_folder)
@@ -90,15 +113,15 @@ class Dataset(BaseModel):
 				zip_ref.extractall(extract_folder)
 
 			temp_inner_folder = os.listdir(target_folder)[0]
-			temp_inner_folder_path = os.path.join(target_folder ,temp_inner_folder)
+			temp_inner_folder_path = join(target_folder ,temp_inner_folder)
 
 			ec = os.listdir(temp_inner_folder_path)[0]
-			ec_path = os.path.join(temp_inner_folder_path,ec)
+			ec_path = join(temp_inner_folder_path,ec)
 
 			inner_folder = os.listdir(ec_path)[0]
-			inner_folder_path = os.path.join(ec_path, inner_folder)
+			inner_folder_path = join(ec_path, inner_folder)
 			
-			gt_path = os.path.join(inner_folder_path ,os.listdir(inner_folder_path)[0])
+			gt_path = join(inner_folder_path ,os.listdir(inner_folder_path)[0])
 			
 			gt_dict = {}
 			with open(gt_path ,'r', encoding='utf-8') as txt_file:
@@ -112,7 +135,7 @@ class Dataset(BaseModel):
 			for i in tqdm(gt_dict):
 				my_string = ''
 				word=''
-				pa = os.path.join(inner_folder_path, i)
+				pa = join(inner_folder_path, i)
 				if (i.endswith('.jpg') or i.endswith('jpeg')):
 						with open(pa, "rb") as img_file:
 							binary_file_data = img_file.read()
