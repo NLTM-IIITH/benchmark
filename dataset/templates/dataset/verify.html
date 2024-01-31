@@ -1,20 +1,20 @@
-{% extends 'base.html' %}
+{% extends 'verify_base.html' %}
 {% load static %}
 
 {% block main_content %}
 <div class="container-fluid mt-2">
   <form method="post">
     {% csrf_token %}
-    <div class="row row-cols-1 row-cols-md-1 g-4">
-      {% for word in word_list %}
+    <div class="row row-cols-2 row-cols-md-1 g-4">
+      {% for word in dataset.words.all %}
       <div class="col">
-        {% if is_malayalam %}
+        {% if dataset.language.name == 'malayalam' %}
         <div class="card h-100 text-center" style="width: 250px;">
         {% else %}
         <div class="card h-100 text-center" style="width: 100px;">
         {% endif %}
           <a href="{{ word.image.url }}" target="_blank">
-            <img src="{{ word.image.url }}" height="50px" width="50px" class="card-img-top" alt="...">
+            <img src="{{ word.image.url }}" height="50px" width="50px" class="card-img-top" alt="..." loading="lazy">
           </a>
           <div class="card-body p-1">
             <hr class="my-1">
@@ -41,7 +41,7 @@
       </center>
       {% endfor %}
     </div>
-    {% if words.count > 0 %}
+    {% if dataset.words.count > 0 %}
     <div class="row mt-2">
       <center>
         <input type="submit" class="btn btn-success">

@@ -159,3 +159,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'user:login'
 LOGIN_REDIRECT_URL = 'core:index'
 LOGOUT_REDIRECT_URL = 'core:index'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 102400

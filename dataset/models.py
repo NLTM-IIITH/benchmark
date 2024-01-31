@@ -91,6 +91,9 @@ class Dataset(BaseModel):
 	def get_absolute_url(self):
 		return reverse_lazy("dataset:detail", kwargs={"pk": self.pk})
 
+	def get_verify_url(self):
+		return reverse_lazy('dataset:verify', kwargs={'pk': self.pk})
+
 	def get_tags(self) -> str:
 		return ', '.join([str(i) for i in self.tags.all()])
 

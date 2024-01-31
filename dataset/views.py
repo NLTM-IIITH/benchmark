@@ -15,6 +15,7 @@ from core.models import Language, Modality
 from dataset.models import Dataset, DatasetTag
 from leaderboard.models import Entry
 from model.models import Model
+from word.models import Word
 
 from .models import Dataset
 
@@ -38,14 +39,23 @@ class DatasetDetailView(BaseDatasetView, DetailView):
 
 class DatasetVerifyView(DatasetDetailView):
 	template_name = 'dataset/verify.html'
-
-	def get_context_data(self, **kwargs):
-		dataset = self.get_object()
-		with open(dataset.file.path, 'r', encoding='utf-8') as f:
-			kwargs.update({
-				'word_list': json.loads(f.read())
-			})
-		return super().get_context_data(**kwargs)
+	
+	def post(self, *args, **kwargs):
+		ids = []
+		for i,v in self.request.POST.items():
+			if i.startswith('csrf'):
+				continue
+			ids.append(int(i))
+		words = list(Word.objects.filter(id__in=ids))
+		ids = {i.id: i for i in words} # type: ignore
+		words = []
+		for i in ids:
+			x = ids[i]
+			x.verify(self.request.POST[str(i)], save=False)
+			words.append(x)
+		Word.objects.bulk_update(words, ['status', 'verified_timestamp'])
+		return redirect(self.get_object().get_absolute_url())
+		# return super().get(*args, **kwargs)
 
 
 def on_submit(request, id, lang, modality):
