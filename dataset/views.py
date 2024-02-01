@@ -3,12 +3,13 @@ import json
 import os
 import tempfile
 import zipfile
+from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
 from django.shortcuts import redirect
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, TemplateView
 from PIL import Image
 
 from core.models import Language, Modality
@@ -35,6 +36,16 @@ class DatasetListView(BaseDatasetView, ListView):
 
 class DatasetDetailView(BaseDatasetView, DetailView):
 	pass
+
+class DatasetCreateView(BaseDatasetView, TemplateView):
+	template_name = 'dataset/add.html'
+
+	def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+		kwargs.update({
+			'modality_list': Modality.objects.all(),
+			'language_list': Language.objects.all()
+		})
+		return super().get_context_data(**kwargs)
 
 
 class DatasetVerifyView(DatasetDetailView):
@@ -83,12 +94,14 @@ def add_dataset(request):
 	if request.method == 'POST':
 		form = request.POST
 		
-		name = form.get('name')
+		# name = form.get('name')
 		modality = form.get('modality').lower()
 		language = form.get('language').lower()
 		description = form.get('description')
+		version = form.get('version')
 		tag_names = form.getlist('tags')
 		uploaded_file = request.FILES['photo']
+		name = f'{modality}_{language}_{version}'
 
 		try:
 			modality_instance = Modality.objects.get(name=modality)
@@ -110,9 +123,10 @@ def add_dataset(request):
 			return redirect('dataset:list')
 
 		if Dataset.objects.filter(
-			name=name,
+			# name=name,
 			modality=modality_instance,
 			language=language_instance,
+			version=version
 		).exists():
 			messages.warning(request,"Already exists in the database",extra_tags='alert')
 			return redirect('dataset:list')
@@ -183,13 +197,14 @@ def add_dataset(request):
             modality=modality_instance,
             language=language_instance,
             description=description,
+			version=version,
         )
 		dataset.save()
 		dataset.tags.set(tags)	
 
 
 		with open(name,'w') as json_file:
-			json.dump(res,json_file)
+			json.dump(res,json_file, indent=4)
 		print(json_file)
 		with open(name, 'rb') as json_file:
 			dataset.file.save(f'{name}.json', File(json_file))	

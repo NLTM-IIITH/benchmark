@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_content %}
+<div class="container-fluid">
+  <form method="post" action="{% url 'dataset:add_dataset' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!-- <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br> -->
+    <br><label for="modality">Modality: </label>
+    <select name="modality" id="modality" required>
+      {% for modality in modality_list %}
+      <option value={{modality}}>{{modality}}</option>
+      {%endfor%}
+    </select>
+    <br><br>
+    <label for="language">Language: </label>
+  
+    <select name="language" id="language" required>
+      {%for lang in language_list %}
+      {{lang}}
+      <option value={{lang}}>{{lang}}</option>
+      {%endfor%}
+    </select>
+    <br><br>
+
+    <label for="description">Description:</label><br>
+    <input type="text" id="description" name="description"><br><br>
+    <label for="version">Version:</label><br>
+    <input type="number" id="version" name="version" value="1"><br><br>
+
+    <input type="checkbox" id="good_quality" name="tags" value="good_quality">
+    <label for="good_quality"> good quality</label><br>
+    <input type="checkbox" id="word" name="tags" value="word">
+    <label for="word"> Word</label><br>
+    <input type="checkbox" id="line" name="tags" value="line">
+    <label for="line"> line</label><br>
+    <input type="checkbox" id="rohitha_benchmark" name="tags" value="rohitha_benchmark">
+    <label for="rohitha_benchmark"> rohitha_benchmark</label><br>
+    <input type="checkbox" id="poor_quality" name="tags" value="poor_quality">
+    <label for="poor_quality"> poor quality</label><br><br>
+    
+    <label for="photo">Upload dataset</label>
+
+    <input 
+      type="file"
+      id="photo" 
+      name="photo"
+      accept=".zip"
+    required>
+    <br><br>
+    <input type="submit" class="btn btn-primary" value="Submit" style:" border-radius: 10px;">
+  </form>
+
+</div>
+{% endblock %}
