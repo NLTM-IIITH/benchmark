@@ -13,11 +13,7 @@ class WordQuerySet(BaseQuerySet):
 
 	def verified(self, **kwargs):
 		return self.filter(
-			status__in=[
-				'correct',
-				'wrong',
-				'skip',
-			],
+			status='correct',
 			**kwargs
 		)
 

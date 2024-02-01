@@ -41,8 +41,11 @@
     <div class="col-2 text-right mb-3">
       <a href="{{ dataset.file.url }}" download class="btn btn-success"><i class="fa fa-download"></i> Download</a>
     </div>
+    <div class="col-4 text-right mb-3">
+      <a href="{{ dataset.get_verify_url }}" class="btn btn-info"><i class="fa fa-check"></i> Verify ({{ dataset.words.verified.count }} Verifed / {{ dataset.words.all.count }} Total words)</a>
+    </div>
     <div class="col-2 text-right mb-3">
-      <a href="{{ dataset.get_verify_url }}" class="btn btn-info"><i class="fa fa-check"></i> Verify ({{ dataset.words.count }} words)</a>
+      <span class="">Total words: {{ dataset.words.verified.count }}</span>
     </div>
   </div>
   <table class="table table-hover table-striped order-column" id='dataset_detail_table'>

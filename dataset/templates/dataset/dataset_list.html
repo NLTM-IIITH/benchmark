@@ -41,6 +41,11 @@
         <th>Modality</th>
         <th>Language</th>
         <th># of API Entries</th>
+        {% if user.is_superuser %}
+        <th>Verified?</th>
+        <th>VerifyCount</th>
+        <th>TotalCount</th>
+        {% endif %}
         <th>Action</th>
       </tr>
     </thead>
@@ -52,6 +57,11 @@
         <td>{{ dataset.language }}</td>
         <td>{{ dataset.entries.count }}</td>
         <!-- <td>{{ dataset.get_tags }}</td> -->
+        {% if user.is_superuser %}
+        <td>{% if dataset.words.verified.count == 0 %}No{% else %}Yes{% endif %}</td>
+        <td>{{ dataset.words.verified.count }}</td>
+        <td>{{ dataset.words.all.count }}</td>
+        {% endif %}
         <td><a href="{{ dataset.get_absolute_url }}">View</a></td>
       </tr>
       {% endfor %}

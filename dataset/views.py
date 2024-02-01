@@ -172,21 +172,24 @@ def add_dataset(request):
 							messages.info(request,f"Line does not have enough elements:{a}")
 				
 				for i in gt_dict:
-					my_string = ''
-					word=''
-					pa = os.path.join(inner_folder_path, i)
-					if i.endswith('.jpg') or i.endswith('jpeg'):
-						with open(pa, "rb") as img_file:
-							binary_file_data = img_file.read()
-							base64_encoded_data = base64.b64encode(binary_file_data)
-							my_string = base64_encoded_data.decode('utf-8')
-					else:
-						messages.error(request,"Image does not end with .jpg")
+					try:
+						my_string = ''
+						word=''
+						pa = os.path.join(inner_folder_path, i)
+						if i.endswith('.jpg') or i.endswith('jpeg'):
+							with open(pa, "rb") as img_file:
+								binary_file_data = img_file.read()
+								base64_encoded_data = base64.b64encode(binary_file_data)
+								my_string = base64_encoded_data.decode('utf-8')
+						else:
+							messages.error(request,"Image does not end with .jpg")
 					
-					if os.path.exists(pa):
-						word=gt_dict[i].strip()
+						if os.path.exists(pa):
+							word=gt_dict[i].strip()
 
-					res_dict = {"image":my_string, "gt":word}
+						res_dict = {"image":my_string, "gt":word}
+					except:
+						continue
 					res.append(res_dict)
 		# print(res)
 		else:
@@ -209,6 +212,7 @@ def add_dataset(request):
 		with open(name, 'rb') as json_file:
 			dataset.file.save(f'{name}.json', File(json_file))	
 		dataset.save()
+		dataset.populate_word_model()
 
 		return redirect('dataset:list')
 	
