@@ -9,7 +9,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files import File
 from django.shortcuts import redirect
-from django.views.generic import DetailView, ListView, TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import DeleteView, DetailView, ListView, TemplateView
 from PIL import Image
 
 from core.models import Language, Modality
@@ -36,6 +37,12 @@ class DatasetListView(BaseDatasetView, ListView):
 
 class DatasetDetailView(BaseDatasetView, DetailView):
 	pass
+
+class DatasetDeleteView(BaseDatasetView, DeleteView):
+	success_url = reverse_lazy('dataset:list')
+
+	def get(self, request, *args, **kwargs):
+		return self.delete(request, *args, **kwargs)
 
 class DatasetCreateView(BaseDatasetView, TemplateView):
 	template_name = 'dataset/add.html'
@@ -208,7 +215,6 @@ def add_dataset(request):
 
 		with open(name,'w') as json_file:
 			json.dump(res,json_file, indent=4)
-		print(json_file)
 		with open(name, 'rb') as json_file:
 			dataset.file.save(f'{name}.json', File(json_file))	
 		dataset.save()

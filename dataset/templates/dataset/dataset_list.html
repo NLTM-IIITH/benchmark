@@ -62,7 +62,13 @@
         <td>{{ dataset.words.verified.count }}</td>
         <td>{{ dataset.words.all.count }}</td>
         {% endif %}
-        <td><a href="{{ dataset.get_absolute_url }}">View</a></td>
+        <td>
+          <a href="{{ dataset.get_absolute_url }}">View</a>
+          &nbsp; &nbsp; &nbsp;
+          {% if user.is_superuser %}
+          <a href="{% url 'dataset:delete' pk=dataset.pk %}" class="text-danger">Delete</a>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>
