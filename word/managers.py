@@ -32,3 +32,7 @@ class WordQuerySet(BaseQuerySet):
 		self.all().update(
 			status='new'
 		)
+
+	def refresh(self):
+		ids = self.all().values_list('id', flat=True)
+		return self.model.objects.filter(id__in=ids)

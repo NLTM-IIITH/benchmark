@@ -70,7 +70,7 @@ class Dataset(BaseModel):
 	def populate_word_model(self):
 		with open(self.file.path, 'r', encoding='utf-8') as f:
 			words = json.loads(f.read())
-		if self.words.count() == len(words):
+		if self.words.count() == len(words): # type: ignore
 			return None
 		print(f'Creating {len(words)} word model instances')
 		tmp = TemporaryDirectory()

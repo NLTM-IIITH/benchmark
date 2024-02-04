@@ -72,8 +72,7 @@ class DatasetVerifyView(DatasetDetailView):
 			x.verify(self.request.POST[str(i)], save=False)
 			words.append(x)
 		Word.objects.bulk_update(words, ['status', 'verified_timestamp'])
-		return redirect(self.get_object().get_absolute_url())
-		# return super().get(*args, **kwargs)
+		return redirect(self.get_object().get_absolute_url()) # type: ignore
 
 
 def on_submit(request, id, lang, modality):
