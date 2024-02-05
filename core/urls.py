@@ -6,6 +6,7 @@ app_name = 'core'
 urlpatterns = [
 	path('icdar/', views.ajoy_icdar_submission, name='icdar'),
 	path('vqa/', views.ajoy_vqa_submission, name='vqa'),
+	path('whatsapp/', views.whatsapp, name='whatsapp'),
 
 	path('', views.IndexView.as_view(), name='index'),
 	path('api/layout/', views.LayoutAPIView.as_view(), name='api-layout'),

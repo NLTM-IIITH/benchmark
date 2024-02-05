@@ -67,6 +67,11 @@ def ajoy_vqa_submission(request):
 		f.write(json.dumps(ret, indent=4))
 	return redirect('https://ilocr.iiit.ac.in/ihtr/thanks.html')
 
+@csrf_exempt
+def whatsapp(request):
+	print(request.POST)
+	return "output"
+
 class BaseCoreView:
 	pass
 
