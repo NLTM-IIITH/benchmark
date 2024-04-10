@@ -1,14 +1,17 @@
+from typing import Any
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 
-from .models import Model, ModelVersion
-from leaderboard.models import Entry
+from core.models import Language, Modality
 from dataset.models import Dataset
-from core.models import Language,Modality
+from leaderboard.models import Entry
 
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.contrib import messages
+from .models import Model, ModelVersion
+
 
 class BaseModelView(LoginRequiredMixin):
 	model = Model
@@ -19,6 +22,18 @@ class ModelListView(BaseModelView, ListView):
 
 class ModelDetailView(BaseModelView, DetailView):
 	pass
+
+
+class ModelVersionDetailView(DetailView):
+	model = ModelVersion
+	context_object_name = 'model'
+	navigation = 'model'
+
+	def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+		kwargs.update({
+			'entry_list': Entry.objects.filter(model__version=self.get_object())
+		})
+		return super().get_context_data(**kwargs)
 
 def on_submit(request , id , lang , modality):
 	print(id,lang,modality)

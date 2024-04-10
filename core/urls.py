@@ -9,6 +9,7 @@ urlpatterns = [
 	path('whatsapp/', views.whatsapp, name='whatsapp'),
 
 	path('', views.IndexView.as_view(), name='index'),
+	path('feedback/', views.FeedbackView.as_view(), name='feedback'),
 	path('api/layout/', views.LayoutAPIView.as_view(), name='api-layout'),
 	path('api/ocr/', views.APIListView.as_view(), name='api-list'),
 	path('api/ocr/detail/', views.APIDetailView.as_view(), name='api-detail'),

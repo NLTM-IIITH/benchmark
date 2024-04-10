@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView, ListView, TemplateView
 
 from model.models import Model
+from word.models import Word
 
 
 def save_file(location, file):
@@ -82,6 +83,17 @@ class IndexView(BaseCoreView, ListView):
 
 	def get(self, request, *args, **kwargs):
 		return redirect('dataset:list')
+
+class FeedbackView(TemplateView):
+	template_name = 'core/feedback.html'
+	navigation = 'index'
+
+	def get_context_data(self, **kwargs):
+		kwargs.update({
+			'word': Word.objects.get(id=self.request.GET.get('word_id', 1001))
+		})
+		return super().get_context_data(**kwargs)
+	
 
 
 class LayoutAPIView(BaseCoreView, TemplateView):

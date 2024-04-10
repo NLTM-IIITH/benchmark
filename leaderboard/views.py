@@ -20,6 +20,6 @@ class LeaderboardDetailView(BaseLeaderboardView, DetailView):
 		with open(self.get_object().file.path, 'r', encoding='utf-8') as f:
 			a = json.loads(f.read())
 		kwargs.update({
-			'data_list': a[:100]
+			'data_list': a
 		})
 		return super().get_context_data(**kwargs)
