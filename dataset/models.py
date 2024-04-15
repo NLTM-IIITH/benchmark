@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import random
 import zipfile
 from os.path import basename, join
 from tempfile import TemporaryDirectory
@@ -11,6 +12,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse_lazy
+from PIL import Image
 from tqdm import tqdm
 
 from core.models import BaseModel, Language, Modality
@@ -56,6 +58,11 @@ class Dataset(BaseModel):
 			FileExtensionValidator(['json'])
 		]
 	)
+	collage_image = models.ImageField(
+		null=True,
+		blank=True,
+		upload_to='Collages',
+	)
 
 	class Meta:
 		default_related_name = 'datasets'
@@ -66,6 +73,37 @@ class Dataset(BaseModel):
 			self.language.code.upper(),
 			self.version,
 		)
+
+	def generate_collage_image(self):
+		tmp = TemporaryDirectory()
+		with open(self.file.path, 'r', encoding='utf-8') as f:
+			a = json.loads(f.read())
+		a = {i['gt'].strip():i['image'] for i in a if len(i['gt'].strip())>2}
+		a = [a[i] for i in a]
+		random.shuffle(a)
+		c = 1
+		for i in a:
+			with open(join(tmp.name, str(c)+'.jpg'), 'wb') as f:
+				f.write(base64.b64decode(i))
+			c+=1
+		if len(a) > 144:
+			a = a[:144]
+		size = 100
+		new = Image.new('RGB', (2000,1125), color=(255,255,255))
+		c=1
+		try:
+			for i in range(0, 1920, size):
+				for j in range(0, 1080, size):
+					x = Image.open(join(tmp.name, str(c)+'.jpg')).convert('RGB').resize((size, size))
+					new.paste(x, (i,j))
+					x.close()
+					c+=1
+		except:
+			pass
+		new.save(join(tmp.name, 'final.jpg'))
+		with open(join(tmp.name, 'final.jpg'), 'rb') as f:
+			self.collage_image.save('final.jpg', File(f))
+
 
 	def populate_word_model(self):
 		with open(self.file.path, 'r', encoding='utf-8') as f:
