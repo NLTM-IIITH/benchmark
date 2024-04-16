@@ -234,3 +234,9 @@ def delete_entry(request, entry_id, entry_model, dataset_id):
 class ReportView(DetailView):
 	model = Dataset
 	template_name = 'dataset/report.html'
+
+	def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+		dataset = self.get_object()
+		if dataset.collage_image == '':
+			dataset.generate_collage_image()
+		return super().get_context_data(**kwargs)
