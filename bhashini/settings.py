@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-(s*i83njpt)-h26#4=e_l2t46utsen+dhj#^p@@hz83_cm!g-e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ilocr.iiit.ac.in', '10.4.16.80']
+ALLOWED_HOSTS = ['ilocr.iiit.ac.in', '10.4.16.80', 'localhost']
 
 CSRF_TRUSTED_ORIGINS = ['https://ilocr.iiit.ac.in']
 

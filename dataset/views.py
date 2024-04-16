@@ -237,6 +237,7 @@ class ReportView(DetailView):
 
 	def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
 		dataset = self.get_object()
-		if dataset.collage_image == '':
+		if dataset.collage_image == None:
+			print('generating collage image')
 			dataset.generate_collage_image()
 		return super().get_context_data(**kwargs)
