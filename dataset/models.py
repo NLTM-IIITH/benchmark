@@ -228,4 +228,5 @@ class DatasetTag(BaseModel):
 @receiver(post_save, sender=Dataset)
 def populate_entries(sender, instance: Dataset, created: bool, **kwargs):
 	if created:
+		instance.populate_word_model()
 		instance.populate_entries()

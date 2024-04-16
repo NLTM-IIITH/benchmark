@@ -67,6 +67,8 @@
           &nbsp; &nbsp; &nbsp;
           {% if user.is_superuser %}
           <a href="{% url 'dataset:delete' pk=dataset.pk %}" class="text-danger">Delete</a>
+          &nbsp; &nbsp; &nbsp;
+          <a target="_blank" href="{% url 'dataset:report' pk=dataset.pk %}" class="text-warning">Report</a>
           {% endif %}
         </td>
       </tr>

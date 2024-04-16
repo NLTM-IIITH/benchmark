@@ -17,7 +17,10 @@ class LeaderboardListView(BaseLeaderboardView, ListView):
 class LeaderboardDetailView(BaseLeaderboardView, DetailView):
 
 	def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-		with open(self.get_object().file.path, 'r', encoding='utf-8') as f:
+		entry = self.get_object()
+		if entry.file == '':
+			entry.evaluate()
+		with open(entry.file.path, 'r', encoding='utf-8') as f:
 			a = json.loads(f.read())
 		kwargs.update({
 			'data_list': a

@@ -27,6 +27,7 @@ class BaseDatasetView(LoginRequiredMixin):
 	navigation = 'dataset'
 
 class DatasetListView(BaseDatasetView, ListView):
+	queryset = Dataset.objects.filter(version=101)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -228,3 +229,8 @@ def delete_entry(request, entry_id, entry_model, dataset_id):
 	return redirect('dataset:detail',pk=dataset_id)
 
 
+
+
+class ReportView(DetailView):
+	model = Dataset
+	template_name = 'dataset/report.html'

@@ -1,0 +1,104 @@
+{% load static %}
+
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <style>
+    @media print {
+      .pagebreak {
+        page-break-before: always;
+      }
+    }
+
+    body {
+      font-size: larger;
+    }
+
+    mark.highlight {
+      background-color: #fca881;
+    }
+
+    mark.ins {
+      background-color: #f0f7;
+    }
+
+    mark.del {
+      background-color: #f007;
+    }
+
+    mark.sub {
+      background-color: #00f7;
+    }
+
+    .fit-90 {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 90vh;
+    }
+
+    .fit-40 {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 40vh;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row text-center">
+      <div class="col">
+        <h4 class="text-right mb-4">Sample Images from Benchmark</h4>
+        <img src="{{ dataset.collage_image.url }}" class="fit-90 border border-info">
+        <div class="text-left text-muted mt-4">Benchmark #{{ dataset }} ({{ dataset.modality.name|title }}, {{ dataset.language.name|title }}, {{ dataset.words.all.count }} Words)</div>
+      </div>
+    </div>
+
+    <!-- <div class="pagebreak"></div> -->
+
+  <div class="container-fluid">
+    <div class="row text-center mt-3">
+      <div class="col">
+        <h4 class="text-right mb-4">
+          Summary of Quantative Evaluations
+        </h4>
+        <table class="table table-sm text-center table-bordered" style="font-size: medium;">
+          <thead>
+            <tr>
+              <th>Entry ID</th>
+              <th>OCR API</th>
+              <th>CRR</th>
+              <th>WRR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in dataset.entries.all %}
+            <tr>
+              <td class="font-weight-bold">
+                {{ i.id }}
+              </td>
+              <td>
+                {{ i.model.version.display_name }}
+              </td>
+              <td>
+                {{ i.crr }}
+              </td>
+              <td class="font-weight-bold">
+                {{ i.wrr }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
