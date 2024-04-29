@@ -81,6 +81,7 @@ class Dataset(BaseModel):
 		a = {i['gt'].strip():i['image'] for i in a if len(i['gt'].strip())>2}
 		a = [a[i] for i in a]
 		random.shuffle(a)
+		print(len(a))
 		c = 1
 		for i in a:
 			with open(join(tmp.name, str(c)+'.jpg'), 'wb') as f:

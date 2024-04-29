@@ -55,7 +55,11 @@
     <div class="row text-center">
       <div class="col">
         <h4 class="text-right mb-4">Sample Images from Benchmark</h4>
+        {% if dataset.collage_image %}
         <img src="{{ dataset.collage_image.url }}" class="fit-90 border border-info">
+        {% else %}
+        <center class="m-5 p-5">Collage Image not available. Please Refresh the page and try again.</center>
+        {% endif %}
         <div class="text-left text-muted mt-4">Benchmark #{{ dataset }} ({{ dataset.modality.name|title }}, {{ dataset.language.name|title }}, {{ dataset.words.all.count }} Words)</div>
       </div>
     </div>
